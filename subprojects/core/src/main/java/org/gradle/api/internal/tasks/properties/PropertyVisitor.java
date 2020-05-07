@@ -16,6 +16,7 @@
 
 package org.gradle.api.internal.tasks.properties;
 
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.FileNormalizer;
 import org.gradle.internal.scan.UsedByScanPlugin;
 
@@ -32,7 +33,7 @@ public interface PropertyVisitor {
 
     void visitOutputFileProperty(String propertyName, boolean optional, PropertyValue value, OutputFilePropertyType filePropertyType);
 
-    void visitDestroyableProperty(Object value);
+    void visitDestroyables(FileCollection destroyables);
 
     void visitLocalStateProperty(Object value);
 
@@ -53,7 +54,7 @@ public interface PropertyVisitor {
         }
 
         @Override
-        public void visitDestroyableProperty(Object value) {
+        public void visitDestroyables(FileCollection destroyables) {
         }
 
         @Override

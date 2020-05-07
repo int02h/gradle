@@ -37,6 +37,7 @@ import org.gradle.api.internal.DefaultPolymorphicDomainObjectContainer;
 import org.gradle.api.internal.DynamicObjectAware;
 import org.gradle.api.internal.HasConvention;
 import org.gradle.api.internal.IConventionAware;
+import org.gradle.api.internal.file.FileCollectionFactory;
 import org.gradle.api.internal.project.taskfactory.DefaultTaskClassInfoStore;
 import org.gradle.api.internal.project.taskfactory.TaskClassInfoStore;
 import org.gradle.api.internal.tasks.properties.InspectionScheme;
@@ -269,8 +270,8 @@ public class ExecutionGlobalServices {
         return new OutputDirectoriesPropertyAnnotationHandler();
     }
 
-    PropertyAnnotationHandler createDestroysPropertyAnnotationHandler() {
-        return new DestroysPropertyAnnotationHandler();
+    PropertyAnnotationHandler createDestroysPropertyAnnotationHandler(FileCollectionFactory fileCollectionFactory) {
+        return new DestroysPropertyAnnotationHandler(fileCollectionFactory);
     }
 
     PropertyAnnotationHandler createLocalStatePropertyAnnotationHandler() {

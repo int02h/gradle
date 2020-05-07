@@ -40,15 +40,13 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.cache.internal.TestCrossBuildInMemoryCacheFactory
 import org.gradle.internal.reflect.TypeValidationContext
 import org.gradle.internal.reflect.annotations.impl.DefaultTypeAnnotationMetadataStore
-import org.gradle.internal.service.ServiceRegistryBuilder
-import org.gradle.internal.service.scopes.ExecutionGlobalServices
 import org.gradle.test.fixtures.AbstractProjectBuilderSpec
 
 import static org.gradle.internal.service.scopes.ExecutionGlobalServices.IGNORED_METHOD_ANNOTATIONS
 import static org.gradle.internal.service.scopes.ExecutionGlobalServices.PROPERTY_TYPE_ANNOTATIONS
 
 class DefaultPropertyWalkerTest extends AbstractProjectBuilderSpec {
-    def services = ServiceRegistryBuilder.builder().provider(new ExecutionGlobalServices()).build()
+
     def visitor = Mock(PropertyVisitor)
     def validationContext = Mock(TypeValidationContext)
 
@@ -70,7 +68,7 @@ class DefaultPropertyWalkerTest extends AbstractProjectBuilderSpec {
         1 * visitor.visitOutputFileProperty('outputFile', false, { it.call().path == 'output' }, OutputFilePropertyType.FILE)
         1 * visitor.visitOutputFileProperty('bean.outputDir', false, { it.call().path == 'outputDir' }, OutputFilePropertyType.DIRECTORY)
 
-        1 * visitor.visitDestroyableProperty({ it.call().path == 'destroyed' })
+        1 * visitor.visitDestroyables({ it instanceof FileCollection })
 
         1 * visitor.visitLocalStateProperty({ it.call().path == 'localState' })
 
@@ -251,7 +249,7 @@ class DefaultPropertyWalkerTest extends AbstractProjectBuilderSpec {
             { false },
             cacheFactory
         )
-        def typeMetadataStore = new DefaultTypeMetadataStore([], services.getAll(PropertyAnnotationHandler), [PathSensitive], typeAnnotationMetadataStore, cacheFactory)
+        def typeMetadataStore = new DefaultTypeMetadataStore([], project.services.getAll(PropertyAnnotationHandler), [PathSensitive], typeAnnotationMetadataStore, cacheFactory)
         new DefaultPropertyWalker(typeMetadataStore).visitProperties(task, validationContext, visitor)
     }
 }

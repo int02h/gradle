@@ -17,6 +17,7 @@
 package org.gradle.api.internal.tasks.properties.annotations;
 
 import com.google.common.collect.ImmutableSet;
+import org.gradle.api.internal.file.FileCollectionFactory;
 import org.gradle.api.internal.tasks.properties.BeanPropertyContext;
 import org.gradle.api.internal.tasks.properties.PropertyValue;
 import org.gradle.api.internal.tasks.properties.PropertyVisitor;
@@ -29,6 +30,13 @@ import java.lang.annotation.Annotation;
 import static org.gradle.api.internal.tasks.properties.ModifierAnnotationCategory.OPTIONAL;
 
 public class DestroysPropertyAnnotationHandler implements PropertyAnnotationHandler {
+
+    private final FileCollectionFactory fileCollectionFactory;
+
+    public DestroysPropertyAnnotationHandler(FileCollectionFactory fileCollectionFactory) {
+        this.fileCollectionFactory = fileCollectionFactory;
+    }
+
     @Override
     public Class<? extends Annotation> getAnnotationType() {
         return Destroys.class;
@@ -51,6 +59,6 @@ public class DestroysPropertyAnnotationHandler implements PropertyAnnotationHand
 
     @Override
     public void visitPropertyValue(String propertyName, PropertyValue value, PropertyMetadata propertyMetadata, PropertyVisitor visitor, BeanPropertyContext context) {
-        visitor.visitDestroyableProperty(value);
+        visitor.visitDestroyables(fileCollectionFactory.resolving(value));
     }
 }

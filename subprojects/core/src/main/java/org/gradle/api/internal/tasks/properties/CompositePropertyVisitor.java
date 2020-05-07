@@ -16,6 +16,7 @@
 
 package org.gradle.api.internal.tasks.properties;
 
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.FileNormalizer;
 
 import javax.annotation.Nullable;
@@ -49,9 +50,9 @@ public class CompositePropertyVisitor implements PropertyVisitor {
     }
 
     @Override
-    public void visitDestroyableProperty(Object value) {
+    public void visitDestroyables(FileCollection destroyables) {
         for (PropertyVisitor visitor : visitors) {
-            visitor.visitDestroyableProperty(value);
+            visitor.visitDestroyables(destroyables);
         }
     }
 

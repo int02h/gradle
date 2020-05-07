@@ -18,6 +18,7 @@ package org.gradle.instantexecution.serialization.codecs
 
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.GeneratedSubclasses
 import org.gradle.api.internal.TaskInputsInternal
 import org.gradle.api.internal.TaskInternal
@@ -152,14 +153,12 @@ class TaskNodeCodec(
 
     private
     suspend fun WriteContext.writeDestroyablesOf(task: TaskInternal) {
-        writeCollection((task.destroyables as TaskDestroyablesInternal).registeredPaths)
+        write((task.destroyables as TaskDestroyablesInternal).registeredPaths)
     }
 
     private
     suspend fun ReadContext.readDestroyablesOf(task: TaskInternal) {
-        readCollection {
-            task.destroyables.register(readNonNull())
-        }
+        task.destroyables.register(readNonNull<FileCollection>())
     }
 
     private

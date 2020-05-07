@@ -18,6 +18,7 @@ package org.gradle.api.internal.tasks.properties;
 
 import com.google.common.collect.ImmutableSortedSet;
 import org.gradle.api.NonNullApi;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.internal.TaskInternal;
 import org.gradle.api.internal.file.CompositeFileCollection;
@@ -235,22 +236,20 @@ public class DefaultTaskProperties implements TaskProperties {
     }
 
     private static class GetDestroyablesVisitor extends PropertyVisitor.Adapter {
-        private final String beanName;
-        private final FileCollectionFactory fileCollectionFactory;
-        private List<Object> destroyables = new ArrayList<>();
+
+        private final ConfigurableFileCollection destroyables;
 
         public GetDestroyablesVisitor(String beanName, FileCollectionFactory fileCollectionFactory) {
-            this.beanName = beanName;
-            this.fileCollectionFactory = fileCollectionFactory;
+            this.destroyables = fileCollectionFactory.configurableFiles(beanName + " destroy files");
         }
 
         @Override
-        public void visitDestroyableProperty(Object value) {
-            destroyables.add(value);
+        public void visitDestroyables(FileCollection destroyables) {
+            this.destroyables.from(destroyables);
         }
 
         public FileCollection getFiles() {
-            return fileCollectionFactory.resolving(beanName + " destroy files", destroyables);
+            return destroyables;
         }
     }
 

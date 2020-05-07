@@ -21,6 +21,7 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.UncheckedIOException;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.internal.TaskInternal;
 import org.gradle.api.internal.file.FileCollectionFactory;
 import org.gradle.api.internal.project.ProjectInternal;
@@ -228,12 +229,15 @@ public class LocalTaskNode extends TaskNode {
                 }
 
                 @Override
-                public void visitDestroyableProperty(final Object value) {
-                    withDeadlockHandling(
-                        taskNode,
-                        "a destroyable",
-                        "destroyables",
-                        () -> mutations.destroyablePaths.addAll(canonicalizedPaths(canonicalizedFileCache, fileCollectionFactory.resolving(value))));
+                public void visitDestroyables(FileCollection destroyables) {
+                    if (!destroyables.isEmpty()) {
+                        withDeadlockHandling(
+                            taskNode,
+                            "a destroyable",
+                            "destroyables",
+                            () -> mutations.destroyablePaths.addAll(canonicalizedPaths(canonicalizedFileCache, destroyables))
+                        );
+                    }
                 }
 
                 @Override

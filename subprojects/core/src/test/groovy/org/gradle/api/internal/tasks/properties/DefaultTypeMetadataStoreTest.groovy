@@ -51,11 +51,9 @@ import org.gradle.internal.reflect.PropertyMetadata
 import org.gradle.internal.reflect.TypeValidationContext
 import org.gradle.internal.reflect.annotations.impl.DefaultTypeAnnotationMetadataStore
 import org.gradle.internal.scripts.ScriptOrigin
-import org.gradle.internal.service.ServiceRegistryBuilder
-import org.gradle.internal.service.scopes.ExecutionGlobalServices
+import org.gradle.test.fixtures.AbstractProjectBuilderSpec
 import spock.lang.Issue
 import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Unroll
 
 import javax.inject.Inject
@@ -64,7 +62,7 @@ import java.lang.annotation.Annotation
 import static ModifierAnnotationCategory.NORMALIZATION
 import static org.gradle.internal.reflect.TypeValidationContext.Severity.WARNING
 
-class DefaultTypeMetadataStoreTest extends Specification {
+class DefaultTypeMetadataStoreTest extends AbstractProjectBuilderSpec {
 
     static final PROCESSED_PROPERTY_TYPE_ANNOTATIONS = [
         Input, InputFile, InputFiles, InputDirectory, Nested, OutputFile, OutputDirectory, OutputFiles, OutputDirectories, Destroys, LocalState
@@ -75,7 +73,6 @@ class DefaultTypeMetadataStoreTest extends Specification {
     ]
 
     @Shared GroovyClassLoader groovyClassLoader
-    def services = ServiceRegistryBuilder.builder().provider(new ExecutionGlobalServices()).build()
     def cacheFactory = new TestCrossBuildInMemoryCacheFactory()
     def typeAnnotationMetadataStore = new DefaultTypeAnnotationMetadataStore(
         [CustomCacheable],
@@ -88,10 +85,14 @@ class DefaultTypeMetadataStoreTest extends Specification {
         { false },
         cacheFactory
     )
-    def metadataStore = new DefaultTypeMetadataStore([], services.getAll(PropertyAnnotationHandler), [Classpath, CompileClasspath], typeAnnotationMetadataStore, cacheFactory)
+    def metadataStore
 
     def setupSpec() {
         groovyClassLoader = new GroovyClassLoader(getClass().classLoader)
+    }
+
+    def setup() {
+        metadataStore = new DefaultTypeMetadataStore([], project.services.getAll(PropertyAnnotationHandler), [Classpath, CompileClasspath], typeAnnotationMetadataStore, cacheFactory)
     }
 
     static class TaskWithCustomAnnotation extends DefaultTask {
