@@ -173,9 +173,6 @@ List ignoredSnippets = [
     snippetId(file('src/snippets/artifacts/maven')), // emits deprecation warning
     snippetId(file('src/snippets/base/customExternalTask')), // emits deprecation warning
     snippetId(file('src/snippets/base/distribution')), // emits deprecation warning
-    snippetId(file('src/snippets/compositeBuilds/basic')), // emits deprecation warning
-    snippetId(file('src/snippets/compositeBuilds/declared-substitution')), // emits deprecation warning
-    snippetId(file('src/snippets/compositeBuilds/plugin-dev')), // emits deprecation warning
     snippetId(file('src/snippets/dependencyManagement/managingTransitiveDependencies-forceForDependency')), // emits deprecation warning
     snippetId(file('src/snippets/java-feature-variant/requiring-features-external')), // emits deprecation warning
     snippetId(file('src/snippets/jvmComponents/scala')), // emits deprecation warning
