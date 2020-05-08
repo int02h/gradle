@@ -274,8 +274,8 @@ public class ExecutionGlobalServices {
         return new DestroysPropertyAnnotationHandler(fileCollectionFactory);
     }
 
-    PropertyAnnotationHandler createLocalStatePropertyAnnotationHandler() {
-        return new LocalStatePropertyAnnotationHandler();
+    PropertyAnnotationHandler createLocalStatePropertyAnnotationHandler(FileCollectionFactory fileCollectionFactory) {
+        return new LocalStatePropertyAnnotationHandler(fileCollectionFactory);
     }
 
     PropertyAnnotationHandler createNestedBeanPropertyAnnotationHandler() {

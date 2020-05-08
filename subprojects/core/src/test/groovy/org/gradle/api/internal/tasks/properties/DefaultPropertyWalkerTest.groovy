@@ -70,7 +70,7 @@ class DefaultPropertyWalkerTest extends AbstractProjectBuilderSpec {
 
         1 * visitor.visitDestroyables({ it instanceof FileCollection })
 
-        1 * visitor.visitLocalStateProperty({ it.call().path == 'localState' })
+        1 * visitor.visitLocalState({ it instanceof FileCollection })
 
         0 * _
     }

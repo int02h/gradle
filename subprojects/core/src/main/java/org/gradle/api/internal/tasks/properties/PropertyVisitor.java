@@ -35,7 +35,7 @@ public interface PropertyVisitor {
 
     void visitDestroyables(FileCollection destroyables);
 
-    void visitLocalStateProperty(Object value);
+    void visitLocalState(FileCollection localState);
 
     @UsedByScanPlugin("test-distribution")
     class Adapter implements PropertyVisitor {
@@ -58,7 +58,7 @@ public interface PropertyVisitor {
         }
 
         @Override
-        public void visitLocalStateProperty(Object value) {
+        public void visitLocalState(FileCollection localState) {
         }
     }
 }

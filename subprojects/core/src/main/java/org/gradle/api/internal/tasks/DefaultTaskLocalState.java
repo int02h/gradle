@@ -16,34 +16,31 @@
 
 package org.gradle.api.internal.tasks;
 
-import com.google.common.collect.Lists;
 import org.gradle.api.NonNullApi;
+import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.FileCollection;
+import org.gradle.api.internal.file.FileCollectionFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @NonNullApi
 public class DefaultTaskLocalState implements TaskLocalStateInternal {
     private final TaskMutator taskMutator;
-    private final List<Object> registeredPaths = Lists.newArrayList();
+    private final ConfigurableFileCollection registeredPaths;
 
-    public DefaultTaskLocalState(TaskMutator taskMutator) {
+    public DefaultTaskLocalState(TaskMutator taskMutator, FileCollectionFactory fileCollectionFactory) {
         this.taskMutator = taskMutator;
+        this.registeredPaths = fileCollectionFactory.configurableFiles("localState");
     }
 
     @Override
     public void register(final Object... paths) {
-        taskMutator.mutate("TaskLocalState.register(Object...)", new Runnable() {
-            @Override
-            public void run() {
-                Collections.addAll(DefaultTaskLocalState.this.registeredPaths, paths);
-            }
+        taskMutator.mutate("TaskLocalState.register(Object...)", () -> {
+            registeredPaths.from(paths);
         });
     }
 
     @Override
-    public Collection<Object> getRegisteredPaths() {
+    public FileCollection getRegisteredPaths() {
         return registeredPaths;
     }
 }

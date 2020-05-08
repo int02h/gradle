@@ -163,14 +163,12 @@ class TaskNodeCodec(
 
     private
     suspend fun WriteContext.writeLocalStateOf(task: TaskInternal) {
-        writeCollection((task.localState as TaskLocalStateInternal).registeredPaths)
+        write((task.localState as TaskLocalStateInternal).registeredPaths)
     }
 
     private
     suspend fun ReadContext.readLocalStateOf(task: TaskInternal) {
-        readCollection {
-            task.localState.register(readNonNull())
-        }
+        task.localState.register(readNonNull<FileCollection>())
     }
 
     /**

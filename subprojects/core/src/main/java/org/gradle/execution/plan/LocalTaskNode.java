@@ -220,12 +220,14 @@ public class LocalTaskNode extends TaskNode {
                 }
 
                 @Override
-                public void visitLocalStateProperty(final Object value) {
-                    withDeadlockHandling(
-                        taskNode,
-                        "a local state property", "local state properties",
-                        () -> mutations.outputPaths.addAll(canonicalizedPaths(canonicalizedFileCache, fileCollectionFactory.resolving(value))));
-                    mutations.hasLocalState = true;
+                public void visitLocalState(FileCollection localState) {
+                    if (!localState.isEmpty()) {
+                        withDeadlockHandling(
+                            taskNode,
+                            "a local state property", "local state properties",
+                            () -> mutations.outputPaths.addAll(canonicalizedPaths(canonicalizedFileCache, localState)));
+                        mutations.hasLocalState = true;
+                    }
                 }
 
                 @Override

@@ -45,9 +45,7 @@ public class TaskPropertyUtils {
         task.getInputs().visitRegisteredProperties(visitor);
         task.getOutputs().visitRegisteredProperties(visitor);
         visitor.visitDestroyables(((TaskDestroyablesInternal) task.getDestroyables()).getRegisteredPaths());
-        for (Object path : ((TaskLocalStateInternal) task.getLocalState()).getRegisteredPaths()) {
-            visitor.visitLocalStateProperty(path);
-        }
+        visitor.visitLocalState(((TaskLocalStateInternal) task.getLocalState()).getRegisteredPaths());
     }
 
     /**

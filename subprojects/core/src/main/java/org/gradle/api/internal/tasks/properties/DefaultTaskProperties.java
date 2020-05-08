@@ -216,22 +216,19 @@ public class DefaultTaskProperties implements TaskProperties {
     }
 
     private static class GetLocalStateVisitor extends PropertyVisitor.Adapter {
-        private final String beanName;
-        private final FileCollectionFactory fileCollectionFactory;
-        private List<Object> localState = new ArrayList<>();
+        private final ConfigurableFileCollection localState;
 
         public GetLocalStateVisitor(String beanName, FileCollectionFactory fileCollectionFactory) {
-            this.beanName = beanName;
-            this.fileCollectionFactory = fileCollectionFactory;
+            this.localState = fileCollectionFactory.configurableFiles(beanName + " local state");
         }
 
         @Override
-        public void visitLocalStateProperty(Object value) {
-            localState.add(value);
+        public void visitLocalState(FileCollection localState) {
+            this.localState.from(localState);
         }
 
         public FileCollection getFiles() {
-            return fileCollectionFactory.resolving(beanName + " local state", localState);
+            return localState;
         }
     }
 
